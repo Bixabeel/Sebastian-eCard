@@ -6,35 +6,755 @@
     <title>Sebastián Carabaguíaz - Tarjeta Tecnológica</title>
     <meta name="description" content="Tarjeta de presentación digital tecnológica" />
 
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* Estilos generales y tema oscuro */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* BODY: permitir scroll en escritorio, pero en móvil la tarjeta será immersive */
         body {
             font-family: 'Roboto Mono', monospace;
             background: #000000;
             min-height: 100vh;
+            display: -webkit-flex;
             display: flex;
+            -webkit-justify-content: center;
             justify-content: center;
+            -webkit-align-items: center;
             align-items: center;
             padding: 20px;
             color: #e0e0e0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
             user-select: none;
+            overflow: hidden; /* Prevenir scroll extra que rompe el canvas */
         }
 
+        /* FONDO NEGRO PURO */
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: #000000;
             z-index: 0;
         }
 
+        /* Canvas Matrix */
         #matrixCanvas {
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.7;
+            display: block; /* Asegurar que el canvas se muestre correctamente */
+        }
+
+        /* Flip Container: altura adaptativa para escritorio */
+        .flip-container {
+            -webkit-perspective: 1500px;
+            perspective: 1500px;
+            width: 100%;
+            max-width: 420px;
+            height: min(700px, 95vh);
+            position: relative;
+            z-index: 10;
+            margin: 0 auto;
+            -webkit-overflow-scrolling: touch;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .flipper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            -webkit-transform-origin: center center;
+            transform-origin: center center;
+        }
+
+        .flip-container.flipped .flipper { 
+            -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg); 
+        }
+
+        /* Card Base */
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: #0a0a0a;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0,255,255,0.1), 0 20px 60px rgba(0,0,0,0.8);
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #1a1a1a;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            pointer-events: auto;
+        }
+
+        /* Border effect */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 8px;
+            padding: 2px;
+            background: linear-gradient(90deg,#00ffff,#0080ff,#7b00ff,#ff00ff,#00ffff);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.8;
+            animation: borderPulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes borderPulse { 0%,100%{opacity:0.6;}50%{opacity:0.9;} }
+
+        /* Front */
+        .front { z-index: 2; display:-webkit-flex; display:flex; -webkit-flex-direction:column; flex-direction:column; padding:45px 35px; }
+        /* Back */
+        .back { 
+            -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg); 
+            display:-webkit-flex; display:flex; -webkit-flex-direction:column; flex-direction:column; padding:45px 35px; z-index:1; 
+        }
+
+        .header { text-align:center; margin-bottom:35px; position:relative; }
+        .tech-badge { position:absolute; top:-10px; right:-10px; background:#00ffff; color:#000; font-size:10px; font-weight:700; padding:4px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:1px; animation:pulse 2s infinite; box-shadow:0 0 10px rgba(0,255,255,0.7); }
+        @keyframes pulse { 0%,100%{opacity:0.8;}50%{opacity:1;} }
+
+        .avatar-container { position:relative; width:110px; height:110px; margin:0 auto 20px; }
+        .avatar-frame { position:relative; width:100%; height:100%; border-radius:8px; overflow:hidden; background:#0a0a0a; padding:3px; box-shadow:0 0 10px rgba(0,255,255,0.5), inset 0 0 5px rgba(0,255,255,0.3); transition:all .3s ease; }
+        .avatar-frame::before { content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; background:linear-gradient(45deg,#00ffff,#0080ff,#7b00ff,#ff00ff,#00ffff); border-radius:10px; z-index:-1; animation:cyberBorder 4s linear infinite; }
+        @keyframes cyberBorder { 0%{background-position:0% 50%}100%{background-position:100% 50%} }
+
+        .avatar { width:100%; height:100%; border-radius:6px; object-fit:cover; position:relative; z-index:1; transition:all .3s ease; }
+        .avatar:hover { transform:scale(1.03); box-shadow:0 0 15px rgba(0,255,255,0.4); }
+
+        .name { font-family:'Space Grotesk', sans-serif; font-size:26px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:-0.5px; position:relative; }
+        .name::after { content:''; position:absolute; bottom:-4px; left:50%; -webkit-transform:translateX(-50%); transform:translateX(-50%); width:40px; height:2px; background:linear-gradient(90deg,transparent,#00ffff,transparent); animation:lineGlow 2s ease infinite; }
+        @keyframes lineGlow { 0%,100%{opacity:0.3;}50%{opacity:0.8;} }
+
+        .title { font-size:12px; color:#00ffff; font-weight:500; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+        .subtitle { font-size:10px; color:#666; text-transform:uppercase; letter-spacing:0.5px; }
+
+        .tech-divider { display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; margin:25px 0; gap:15px; }
+        .divider-line { -webkit-flex:1; flex:1; height:1px; background:linear-gradient(90deg,transparent,#00ffff,transparent); opacity:0.3; }
+        .divider-dot { width:4px; height:4px; background:#00ffff; border-radius:50%; animation:dotPulse 2s infinite; }
+        @keyframes dotPulse { 0%,100%{opacity:0.3; -webkit-transform:scale(1); transform:scale(1);}50%{opacity:1; -webkit-transform:scale(1.5); transform:scale(1.5);} }
+
+        .contact-info { -webkit-flex:1; flex:1; display:-webkit-flex; display:flex; -webkit-flex-direction:column; flex-direction:column; gap:14px; }
+        .contact-item { display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; gap:16px; padding:14px; background:#0f0f0f; border:1px solid #1a1a1a; border-radius:6px; transition:all .3s ease; position:relative; overflow:hidden; }
+        .contact-item::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent, rgba(0,255,255,0.1), transparent); transition:left .5s ease; }
+        .contact-item:hover::before { left:100%; }
+        .contact-item:hover { background:#1a1a1a; border-color:#00ffff; -webkit-transform:translateX(4px); transform:translateX(4px); box-shadow:0 0 20px rgba(0,255,255,0.1); }
+
+        .contact-icon { width:38px; height:38px; background:#1a1a1a; border:1px solid #2a2a2a; border-radius:6px; display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; -webkit-justify-content:center; justify-content:center; color:#00ffff; font-size:14px; transition:all .3s ease; }
+        .contact-item:hover .contact-icon { background:#00ffff; color:#000; box-shadow:0 0 15px rgba(0,255,255,0.5); -webkit-transform:rotate(5deg); transform:rotate(5deg); }
+
+        .contact-text { -webkit-flex:1; flex:1; }
+        .contact-label { font-size:10px; color:#666; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.5px; }
+        .contact-value { font-size:14px; color:#fff; font-weight:500; font-family:'Space Grotesk', sans-serif; }
+        .contact-value a { color:inherit; text-decoration:none; transition:color .3s ease; position:relative; }
+        .contact-value a::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1px; background:#00ffff; transition:width .3s ease; }
+        .contact-value a:hover { color:#00ffff; }
+        .contact-value a:hover::after { width:100%; }
+
+        .flip-button {
+            margin-top:25px; padding:14px 20px; background:transparent; border:1px solid #1a1a1a; border-radius:6px;
+            color:#00ffff; font-size:12px; font-weight:500; cursor:pointer; transition:all .3s ease; text-transform:uppercase;
+            letter-spacing:1px; display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; -webkit-justify-content:center; justify-content:center; gap:10px; position:relative; overflow:hidden;
+        }
+        .flip-button::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent, rgba(0,255,255,0.2), transparent); transition:left .5s ease; }
+        .flip-button:hover::before { left:100%; }
+        .flip-button:hover { background:#1a1a1a; border-color:#00ffff; color:#fff; -webkit-transform:translateY(-2px); transform:translateY(-2px); box-shadow:0 5px 20px rgba(0,255,255,0.2); }
+
+        .qr-section { text-align:center; margin-bottom:30px; }
+        .qr-container { display:inline-block; padding:20px; background:#0f0f0f; border:1px solid #1a1a1a; border-radius:8px; position:relative; overflow:hidden; }
+        .qr-container::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,#00ffff,transparent); animation:scanLine 2s linear infinite; }
+        @keyframes scanLine { 0%{-webkit-transform:translateX(-100%); transform:translateX(-100%);}100%{-webkit-transform:translateX(100%); transform:translateX(100%);} }
+
+        .qr-code { width:170px; height:170px; border-radius:4px; filter:contrast(1.2); }
+        .qr-label { font-size:11px; color:#666; margin-top:15px; text-transform:uppercase; letter-spacing:0.5px; }
+
+        .action-buttons { display:-webkit-flex; display:flex; -webkit-flex-direction:column; flex-direction:column; gap:12px; }
+        .action-btn {
+            padding:15px; background:#0f0f0f; border:1px solid #1a1a1a; border-radius:6px; color:#fff; font-size:13px; font-weight:500;
+            cursor:pointer; transition:all .3s ease; text-decoration:none; display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; -webkit-justify-content:center; justify-content:center; gap:12px;
+            text-transform:uppercase; letter-spacing:0.5px; position:relative; overflow:hidden;
+        }
+        .action-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent, rgba(0,255,255,0.1), transparent); transition:left .5s ease; }
+        .action-btn:hover::before { left:100%; }
+        .action-btn:hover { -webkit-transform:translateY(-2px); transform:translateY(-2px); box-shadow:0 5px 20px rgba(0,255,255,0.2); }
+        .whatsapp-btn:hover { background:#25D366; border-color:#25D366; color:#000; box-shadow:0 5px 20px rgba(37,211,102,0.4); }
+        .save-btn:hover { background:#00ffff; border-color:#00ffff; color:#000; box-shadow:0 5px 20px rgba(0,255,255,0.4); }
+        .website-btn:hover { background:#0080ff; border-color:#0080ff; color:#fff; box-shadow:0 5px 20px rgba(0,128,255,0.4); }
+
+        .back-button { margin-top:20px; padding:12px; background:transparent; border:1px solid #2a2a2a; border-radius:6px; color:#666; font-size:11px; font-weight:400; cursor:pointer; transition:all .3s ease; text-transform:uppercase; letter-spacing:0.5px; display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; -webkit-justify-content:center; justify-content:center; gap:8px; }
+        .back-button:hover { background:#1a1a1a; border-color:#444; color:#00ffff; -webkit-transform:translateY(-1px); transform:translateY(-1px); }
+
+        /* Responsive: desktop->mobile */
+        @media (max-width: 480px) {
+            /* Hacer la tarjeta inmersiva */
+            body { padding: 0; overflow: hidden; } /* limpio para full screen */
+            .flip-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                max-width: none;
+                margin: 0;
+                border-radius: 0;
+                z-index: 999; /* encima del canvas */
+                display: -webkit-flex;
+                display: flex;
+                -webkit-align-items: stretch;
+                align-items: stretch;
+                -webkit-justify-content: center;
+                justify-content: center;
+            }
+
+            .card {
+                border-radius: 0;
+                height: 100%;
+            }
+
+            .front, .back {
+                padding: 
+                    max(20px, env(safe-area-inset-top)) 
+                    max(16px, env(safe-area-inset-left)) 
+                    max(20px, env(safe-area-inset-bottom))
+                    max(16px, env(safe-area-inset-right));
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .name { font-size: 22px; }
+            .qr-code { width: 140px; height: 140px; }
+
+            /* Ajustes visuales para que elementos no estén pegados al borde */
+            .avatar-container { width:96px; height:96px; }
+            .flip-button { margin-bottom: 10px; }
+            
+            /* Prevenir zoom en iOS */
+            input, select, textarea {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .flip-container { height: 95vh; }
+            .front, .back { padding: 30px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas para el efecto Matrix -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Main Container (immersive en móviles) -->
+    <div class="flip-container" id="flipContainer" aria-live="polite">
+        <div class="flipper">
+            <!-- Front Card -->
+            <div class="card front" role="region" aria-label="Tarjeta frontal">
+                <div class="header">
+                    <div class="tech-badge">PRO</div>
+                    <div class="avatar-container">
+                        <div class="avatar-frame">
+                            <img src="https://abundia.io/wp-content/uploads/2025/10/fotor_1731304264622-scaled.jpg"
+                                 alt="Sebastián Carabaguíaz"
+                                 class="avatar">
+                        </div>
+                    </div>
+                    <h1 class="name">Sebastián Carabaguíaz</h1>
+                    <p class="title">Especialista en Soluciones Digitales</p>
+                    <p class="subtitle">Tecnología & Innovación</p>
+                </div>
+
+                <div class="tech-divider">
+                    <div class="divider-line"></div>
+                    <div class="divider-dot"></div>
+                    <div class="divider-line"></div>
+                </div>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-phone" aria-hidden="true"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Teléfono</div>
+                            <div class="contact-value"><a href="tel:+50689288555">+506 8928-8555</a></div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value"><a href="mailto:sebastian@abundia.io">sebastian@abundia.io</a></div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-globe" aria-hidden="true"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Sitio Web</div>
+                            <div class="contact-value"><a href="https://abundia.io" target="_blank" rel="noopener">abundia.io</a></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="flip-button" onclick="flipCard()" aria-expanded="false" aria-controls="qrSection">
+                    <i class="fas fa-qrcode" aria-hidden="true"></i> Acceder QR
+                </button>
+            </div>
+
+            <!-- Back Card -->
+            <div class="card back" id="qrSection" role="region" aria-label="Tarjeta trasera - QR y acciones">
+                <div class="qr-section">
+                    <div class="qr-container">
+                        <img src="https://almaviva.abundia.io/wp-content/uploads/2025/11/QR-Code-Abundia.webp"
+                             alt="Código QR"
+                             class="qr-code">
+                    </div>
+                    <p class="qr-label">Escanea para sincronizar contacto</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://wa.me/50689288555" target="_blank" class="action-btn whatsapp-btn" rel="noopener">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> Conectar WhatsApp
+                    </a>
+
+                    <a href="#" id="saveContact" class="action-btn save-btn">
+                        <i class="fas fa-download" aria-hidden="true"></i> Exportar Contacto
+                    </a>
+
+                    <a href="https://abundia.io" target="_blank" class="action-btn website-btn" rel="noopener">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Abrir Portal
+                    </a>
+                </div>
+                
+                <button class="back-button" onclick="flipCard()">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i> Volver
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== Detectar iOS ==========
+        const isIOS = () => {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        };
+
+        // ========== Matrix (canvas) ==========
+        class MatrixRain {
+            constructor() {
+                this.canvas = document.getElementById('matrixCanvas');
+                this.ctx = this.canvas.getContext('2d', { alpha: false }); // Mejor performance
+                this.characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                this.fontSize = 14;
+                this.columns = 0;
+                this.drops = [];
+                this.isIOSDevice = isIOS();
+                this.fps = this.isIOSDevice ? 20 : 30; // Reducir FPS en iOS
+                this.lastRender = 0;
+                this.running = true;
+                this.init();
+            }
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                // Forzar un repaint inicial
+                setTimeout(() => this.animate(0), 100);
+            }
+            resize() {
+                // Asegurar que el canvas tenga el tamaño correcto
+                this.canvas.width = window.innerWidth * window.devicePixelRatio;
+                this.canvas.height = window.innerHeight * window.devicePixelRatio;
+                this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                this.columns = Math.floor(this.canvas.width / this.fontSize);
+                this.drops = [];
+                for (let i = 0; i < this.columns; i++) {
+                    this.drops[i] = Math.random() * -this.canvas.height / this.fontSize;
+                }
+                // Forzar un repaint después del resize
+                this.lastRender = 0;
+            }
+            animate(timestamp) {
+                if (!this.running) return;
+                
+                if (timestamp - this.lastRender < (1000 / this.fps)) {
+                    requestAnimationFrame((ts) => this.animate(ts));
+                    return;
+                }
+                this.lastRender = timestamp;
+                
+                // Limpiar el canvas con fondo negro puro
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = '#00ffff';
+                this.ctx.font = `${this.fontSize}px monospace`;
+                this.ctx.textAlign = 'center';
+                
+                for (let i = 0; i < this.columns; i++) {
+                    const text = this.characters.charAt(Math.floor(Math.random() * this.characters.length));
+                    const x = i * this.fontSize;
+                    const y = this.drops[i] * this.fontSize;
+                    
+                    // Crear gradiente para cada letra
+                    const gradient = this.ctx.createLinearGradient(0, y - this.fontSize, 0, y);
+                    gradient.addColorStop(0, 'rgba(0,255,255,0.1)');
+                    gradient.addColorStop(1, '#00ffff');
+                    this.ctx.fillStyle = gradient;
+                    
+                    this.ctx.fillText(text, x, y);
+                    
+                    // Reiniciar gotas que salen de la pantalla
+                    if (y > this.canvas.height / this.fontSize && Math.random() > 0.975) {
+                        this.drops[i] = Math.random() * -20;
+                    }
+                    
+                    // Velocidad adaptativa
+                    this.drops[i] += Math.random() * 0.5 + 0.1;
+                }
+                
+                requestAnimationFrame((ts) => this.animate(ts));
+            }
+            start() {
+                this.running = true;
+                this.animate(0);
+            }
+            stop() {
+                this.running = false;
+            }
+        }
+
+        // ========== Flip ==========
+        function flipCard() {
+            const container = document.getElementById('flipContainer');
+            const isFlipped = container.classList.toggle('flipped');
+            const btn = document.querySelector('.flip-button');
+            if (btn) btn.setAttribute('aria-expanded', isFlipped ? 'true' : 'false');
+        }
+
+        // ========== vCard ==========
+        class VCardGenerator {
+            constructor() {
+                this.saveButton = document.getElementById('saveContact');
+                this.isIOSDevice = isIOS();
+                this.init();
+            }
+            init() {
+                this.vcard = [
+                    "BEGIN:VCARD",
+                    "VERSION:3.0",
+                    "N:Carabaguíaz;Sebastián;;;",
+                    "FN:Sebastián Carabaguíaz",
+                    "TITLE:Especialista en Soluciones Digitales",
+                    "TEL;TYPE=CELL:+50689288555",
+                    "EMAIL:sebastian@abundia.io",
+                    "URL:https://abundia.io",
+                    "NOTE:Fundador de Abundia.io — Soluciones digitales, chatbots con IA, soporte técnico, multimedia y diseño web.",
+                    "END:VCARD"
+                ].join("\r\n");
+                
+                if (this.isIOSDevice) {
+                    this.setupIOSDownload();
+                } else {
+                    this.setupStandardDownload();
+                }
+            }
+            
+            setupStandardDownload() {
+                const blob = new Blob([this.vcard], { type: 'text/vcard;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                this.saveButton.href = url;
+                this.saveButton.download = 'sebastian_carabaguiaz.vcf';
+                this.saveButton.addEventListener('click', () => {
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                });
+            }
+            
+            setupIOSDownload() {
+                this.saveButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.downloadForIOS();
+                });
+            }
+            
+            downloadForIOS() {
+                // Método 1: Intentar navigator.share (mejor experiencia)
+                if (navigator.share && navigator.canShare) {
+                    this.tryShareAPI();
+                    return;
+                }
+                
+                // Método 2: Crear un enlace temporal que funcione en iOS
+                this.createTemporaryLink();
+            }
+            
+            tryShareAPI() {
+                const blob = new Blob([this.vcard], { type: 'text/vcard' });
+                const file = new File([blob], 'contacto_sebastian_carabaguiaz.vcf', { 
+                    type: 'text/vcard',
+                    lastModified: new Date().getTime()
+                });
+                
+                const shareData = {
+                    files: [file],
+                    title: 'Contacto - Sebastián Carabaguíaz',
+                    text: 'Guarda mi contacto en tu agenda'
+                };
+                
+                if (navigator.canShare(shareData)) {
+                    navigator.share(shareData)
+                        .then(() => console.log('Contacto compartido exitosamente'))
+                        .catch((error) => {
+                            console.log('Error al compartir:', error);
+                            if (error.name !== 'AbortError') { // Usuario canceló
+                                this.createTemporaryLink();
+                            }
+                        });
+                } else {
+                    this.createTemporaryLink();
+                }
+            }
+            
+            createTemporaryLink() {
+                // Método fallback para iOS: crear un enlace que se abre en una nueva pestaña
+                const blob = new Blob([this.vcard], { type: 'text/vcard;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                
+                // Crear un enlace temporal
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'sebastian_carabaguiaz.vcf';
+                
+                // Para iOS, necesitamos un clic de usuario para que funcione
+                document.body.appendChild(a);
+                
+                // Programar el clic para el próximo ciclo de eventos
+                setTimeout(() => {
+                    try {
+                        a.click();
+                    } catch (error) {
+                        console.log('Error en clic automático:', error);
+                        // Mostrar mensaje al usuario
+                        this.showManualDownloadInstructions();
+                    }
+                    
+                    // Limpiar después de un tiempo
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }, 1000);
+                }, 50);
+            }
+            
+            showManualDownloadInstructions() {
+                // Mostrar instrucciones para iOS si el método automático falla
+                alert('Para guardar el contacto en iOS:\n1. Toque el botón nuevamente\n2. Cuando aparezca la opción, seleccione "Descargar"\n3. Luego abra el archivo descargado para agregarlo a sus contactos');
+            }
+        }
+
+        // ========== Tech Effects ==========
+        class TechEffects {
+            constructor() { 
+                this.isIOSDevice = isIOS();
+                this.init(); 
+            }
+            init() {
+                this.addHoverEffects();
+                this.initKeyboardNavigation();
+                this.initTouchSupport();
+                this.initParticleEffects();
+            }
+            addHoverEffects() {
+                const contactItems = document.querySelectorAll('.contact-item');
+                contactItems.forEach(item => {
+                    item.addEventListener('mouseenter', () => { 
+                        if (!this.isIOSDevice) this.createCyberParticles(item); 
+                    });
+                    item.addEventListener('touchstart', (e) => { 
+                        if (this.isIOSDevice) {
+                            this.createCyberParticles(item);
+                        }
+                    }, { passive: true });
+                });
+            }
+            createCyberParticles(element) {
+                const rect = element.getBoundingClientRect();
+                const particles = 8;
+                for (let i = 0; i < particles; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'fixed';
+                    particle.style.width = '3px';
+                    particle.style.height = '3px';
+                    particle.style.background = `hsl(${Math.random()*60 + 160}, 100%, 70%)`;
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = `${rect.left + Math.random()*rect.width}px`;
+                    particle.style.top = `${rect.top + Math.random()*rect.height}px`;
+                    particle.style.pointerEvents = 'none';
+                    particle.style.zIndex = '9999';
+                    particle.style.boxShadow = '0 0 8px currentColor';
+                    const xDirection = (Math.random() - 0.5) * 40;
+                    const yDirection = (Math.random() - 0.5) * 20;
+                    particle.style.transform = `translate(${xDirection}px, ${yDirection}px)`;
+                    particle.style.transition = 'transform .6s ease-out, opacity .6s ease-out';
+                    particle.style.opacity = '1';
+                    document.body.appendChild(particle);
+                    setTimeout(() => {
+                        particle.style.transform = `translate(${xDirection*2}px, ${yDirection*2}px)`;
+                        particle.style.opacity = '0';
+                        setTimeout(()=> {
+                            if (particle.parentNode) {
+                                particle.parentNode.removeChild(particle);
+                            }
+                        }, 600);
+                    }, 100);
+                }
+            }
+            initKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        const focusedElement = document.activeElement;
+                        if (focusedElement && focusedElement.classList && 
+                            (focusedElement.classList.contains('flip-button') || 
+                             focusedElement.classList.contains('back-button'))) {
+                            e.preventDefault();
+                            flipCard();
+                        }
+                    }
+                    if (e.key === 'ArrowRight') document.getElementById('flipContainer').classList.add('flipped');
+                    if (e.key === 'ArrowLeft') document.getElementById('flipContainer').classList.remove('flipped');
+                });
+            }
+            initTouchSupport() {
+                let touchStartX = 0;
+                let touchEndX = 0;
+                const container = document.getElementById('flipContainer');
+                
+                container.addEventListener('touchstart', (e) => { 
+                    touchStartX = e.changedTouches[0].screenX; 
+                }, { passive: true });
+                
+                container.addEventListener('touchend', (e) => { 
+                    touchEndX = e.changedTouches[0].screenX; 
+                    this.handleSwipe(container); 
+                }, { passive: true });
+                
+                this.handleSwipe = (container) => {
+                    const diff = touchEndX - touchStartX;
+                    if (Math.abs(diff) > 50) {
+                        if (diff < 0) {
+                            container.classList.add('flipped');
+                        } else {
+                            container.classList.remove('flipped');
+                        }
+                    }
+                };
+            }
+            initParticleEffects() {
+                const particleCount = this.isIOSDevice ? 10 : 20; // Menos partículas en iOS
+                
+                const particleContainer = document.createElement('div');
+                particleContainer.id = 'particles-container';
+                particleContainer.style.position = 'fixed';
+                particleContainer.style.top = '0';
+                particleContainer.style.left = '0';
+                particleContainer.style.width = '100%';
+                particleContainer.style.height = '100%';
+                particleContainer.style.pointerEvents = 'none';
+                particleContainer.style.zIndex = '2';
+                document.body.appendChild(particleContainer);
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'cyber-particle';
+                    particle.style.position = 'absolute';
+                    particle.style.width = `${Math.random()*3 + 1}px`;
+                    particle.style.height = particle.style.width;
+                    particle.style.background = 'rgba(0,255,255,0.3)';
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = `${Math.random()*100}%`;
+                    particle.style.top = `${Math.random()*100}%`;
+                    particle.style.animation = `float ${Math.random()*15 + 10}s infinite linear`;
+                    particleContainer.appendChild(particle);
+                }
+                
+                // Añadir keyframes una sola vez
+                if (!document.getElementById('particle-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'particle-animation';
+                    style.innerHTML = `
+                        @keyframes float {
+                            0% { transform: translate(0,0) scale(1); opacity: 0.8; }
+                            50% { transform: translate(${Math.random()*40 - 20}px, ${Math.random()*40 - 20}px) scale(1.2); opacity: 1; }
+                            100% { transform: translate(0,0) scale(1); opacity: 0.8; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar Matrix Rain
+            const matrix = new MatrixRain();
+            matrix.start();
+            
+            // Inicializar VCard
+            new VCardGenerator();
+            
+            // Inicializar efectos
+            new TechEffects();
+            
+            // Añadir protección contra errores
+            window.addEventListener('error', (e) => {
+                console.error('Error capturado:', e.message, e.filename, e.lineno);
+                if (e.message.includes('canvas')) {
+                    console.log('Intentando reiniciar canvas...');
+                    const canvas = document.getElementById('matrixCanvas');
+                    if (canvas) {
+                        canvas.width = window.innerWidth;
+                        canvas.height = window.innerHeight;
+                    }
+                }
+            });
+        });
+
+        // Manejar visibilidad de la página para pausar/reanudar animaciones
+        document.addEventListener('visibilitychange', () => {
+            const matrixCanvas = document.getElementById('matrixCanvas');
+            if (document.hidden) {
+                if (matrixCanvas) {
+                    const ctx = matrixCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+                }
+            }
+        });
+    </script>
+</body>
+</html>            position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 1;
@@ -408,3 +1128,4 @@
     </script>
 </body>
 </html>
+
