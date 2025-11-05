@@ -6,7 +6,7 @@
     <title>Sebastián Carabaguíaz - Tarjeta Tecnológica</title>
     <meta name="description" content="Tarjeta de presentación digital tecnológica" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css " rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -20,7 +20,6 @@
             color: #e0e0e0;
             user-select: none;
         }
-
         body::before {
             content: '';
             position: fixed;
@@ -29,7 +28,6 @@
             background: #000000;
             z-index: 0;
         }
-
         #matrixCanvas {
             position: fixed;
             top: 0; left: 0;
@@ -38,7 +36,6 @@
             opacity: 0.7;
             pointer-events: none;
         }
-
         .flip-container {
             perspective: 1500px;
             width: 100%;
@@ -50,7 +47,6 @@
             display: flex;
             overflow-scrolling: touch;
         }
-
         .flipper {
             position: relative;
             width: 100%; height: 100%;
@@ -58,9 +54,7 @@
             transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             transform-origin: center center;
         }
-
         .flip-container.flipped .flipper { transform: rotateY(180deg); }
-
         .card {
             position: absolute;
             width: 100%; height: 100%;
@@ -73,7 +67,6 @@
             border: 1px solid #1a1a1a;
             pointer-events: auto;
         }
-
         .card::before {
             content: '';
             position: absolute;
@@ -88,16 +81,12 @@
             animation: borderPulse 3s ease-in-out infinite;
             pointer-events: none;
         }
-
         @keyframes borderPulse { 0%,100%{opacity:0.6;}50%{opacity:0.9;} }
-
         .front, .back {
             display: flex; flex-direction: column;
             padding: 45px 35px;
         }
-
         .back { transform: rotateY(180deg); }
-
         .header { text-align: center; margin-bottom: 35px; position: relative; }
         .tech-badge {
             position: absolute;
@@ -110,7 +99,6 @@
             box-shadow: 0 0 10px rgba(0,255,255,0.7);
         }
         @keyframes pulse { 0%,100%{opacity:0.8;}50%{opacity:1;} }
-
         .avatar-container {
             position: relative;
             width: 110px; height: 110px;
@@ -132,7 +120,6 @@
             animation: cyberBorder 4s linear infinite;
         }
         @keyframes cyberBorder { 0%{background-position:0% 50%}100%{background-position:100% 50%} }
-
         .avatar {
             width: 100%; height: 100%;
             object-fit: cover; border-radius: 6px;
@@ -140,7 +127,6 @@
             transition: all .3s ease;
         }
         .avatar:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0,255,255,0.4); }
-
         .name {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 26px; font-weight: 700; color: #fff;
@@ -155,10 +141,8 @@
             animation: lineGlow 2s ease infinite;
         }
         @keyframes lineGlow { 0%,100%{opacity:0.3;}50%{opacity:0.8;} }
-
         .title { font-size: 12px; color: #00ffff; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
         .subtitle { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-
         .tech-divider {
             display: flex; align-items: center;
             margin: 25px 0; gap: 15px;
@@ -173,7 +157,6 @@
             animation: dotPulse 2s infinite;
         }
         @keyframes dotPulse { 0%,100%{opacity:0.3; transform:scale(1);}50%{opacity:1; transform:scale(1.5);} }
-
         .contact-info {
             flex: 1; display: flex; flex-direction: column; gap: 14px;
         }
@@ -182,7 +165,15 @@
             padding: 14px; background: #0f0f0f;
             border: 1px solid #1a1a1a; border-radius: 6px;
             transition: all .3s ease; position: relative; overflow: hidden;
+            cursor: pointer;
         }
+        .contact-item::before {
+            content: ''; position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
+            transition: left .5s ease;
+        }
+        .contact-item:hover::before { left: 100%; }
         .contact-item:hover {
             background: #1a1a1a; border-color: #00ffff;
             transform: translateX(4px); box-shadow: 0 0 20px rgba(0,255,255,0.1);
@@ -200,30 +191,51 @@
         .contact-text { flex: 1; }
         .contact-label { font-size: 10px; color: #666; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
         .contact-value { font-size: 14px; color: #fff; font-weight: 500; font-family: 'Space Grotesk', sans-serif; }
-        .contact-value a { color: inherit; text-decoration: none; }
+        .contact-value a { 
+            color: inherit; text-decoration: none; 
+            position: relative; transition: color .3s ease;
+        }
+        .contact-value a::after {
+            content: ''; position: absolute;
+            bottom: -2px; left: 0; width: 0; height: 1px;
+            background: #00ffff; transition: width .3s ease;
+        }
         .contact-value a:hover { color: #00ffff; }
-
+        .contact-value a:hover::after { width: 100%; }
         .flip-button {
             margin-top: 25px; padding: 14px 20px; background: transparent;
             border: 1px solid #1a1a1a; border-radius: 6px;
             color: #00ffff; font-size: 12px; font-weight: 500; cursor: pointer;
             transition: all .3s ease; text-transform: uppercase; letter-spacing: 1px;
             display: flex; align-items: center; justify-content: center; gap: 10px;
+            position: relative; overflow: hidden;
         }
+        .flip-button::before {
+            content: ''; position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent);
+            transition: left .5s ease;
+        }
+        .flip-button:hover::before { left: 100%; }
         .flip-button:hover {
             background: #1a1a1a; border-color: #00ffff; color: #fff;
             transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,255,255,0.2);
         }
-
         .qr-section { text-align: center; margin-bottom: 30px; }
         .qr-container {
             display: inline-block; padding: 20px; background: #0f0f0f;
             border: 1px solid #1a1a1a; border-radius: 8px;
             position: relative; overflow: hidden;
         }
+        .qr-container::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scanLine 2s linear infinite;
+        }
+        @keyframes scanLine { 0%{transform:translateX(-100%);}100%{transform:translateX(100%);} }
         .qr-code { width: 170px; height: 170px; border-radius: 4px; filter: contrast(1.2); }
         .qr-label { font-size: 11px; color: #666; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-
         .action-buttons { display: flex; flex-direction: column; gap: 12px; }
         .action-btn {
             padding: 15px; background: #0f0f0f; border: 1px solid #1a1a1a;
@@ -231,14 +243,21 @@
             cursor: pointer; transition: all .3s ease; text-decoration: none;
             display: flex; align-items: center; justify-content: center; gap: 12px;
             text-transform: uppercase; letter-spacing: 0.5px;
+            position: relative; overflow: hidden;
         }
+        .action-btn::before {
+            content: ''; position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
+            transition: left .5s ease;
+        }
+        .action-btn:hover::before { left: 100%; }
         .action-btn:hover {
             transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,255,255,0.2);
         }
         .whatsapp-btn:hover { background: #25D366; border-color: #25D366; color: #000; box-shadow: 0 5px 20px rgba(37,211,102,0.4); }
         .save-btn:hover { background: #00ffff; border-color: #00ffff; color: #000; box-shadow: 0 5px 20px rgba(0,255,255,0.4); }
         .website-btn:hover { background: #0080ff; border-color: #0080ff; color: #fff; box-shadow: 0 5px 20px rgba(0,128,255,0.4); }
-
         .back-button {
             margin-top: 20px; padding: 12px; background: transparent;
             border: 1px solid #2a2a2a; border-radius: 6px;
@@ -250,7 +269,19 @@
             background: #1a1a1a; border-color: #444; color: #00ffff;
             transform: translateY(-1px);
         }
-
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            background: linear-gradient(45deg, #00ffff, #0080ff, #7b00ff);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+        }
+        @keyframes float {
+            0% { transform: translate(0,0) scale(1); opacity: 0.8; }
+            50% { transform: translate(var(--x), var(--y)) scale(1.2); opacity: 1; }
+            100% { transform: translate(0,0) scale(1); opacity: 0.8; }
+        }
         @media (max-width: 480px) {
             body { padding: 0; }
             .flip-container {
@@ -275,10 +306,8 @@
             .qr-code { width: 140px; height: 140px; }
             .avatar-container { width: 96px; height: 96px; }
             .flip-button { margin-bottom: 10px; }
-
             input, select, textarea { font-size: 16px; }
         }
-
         @media (max-height: 700px) {
             .flip-container { height: 95vh; }
             .front, .back { padding: 30px 25px; }
@@ -287,7 +316,6 @@
 </head>
 <body>
     <canvas id="matrixCanvas"></canvas>
-
     <div class="flip-container" id="flipContainer" aria-live="polite">
         <div class="flipper">
             <div class="card front" role="region" aria-label="Tarjeta frontal">
@@ -295,7 +323,7 @@
                     <div class="tech-badge">PRO</div>
                     <div class="avatar-container">
                         <div class="avatar-frame">
-                            <img src="https://abundia.io/wp-content/uploads/2025/10/fotor_1731304264622-scaled.jpg"
+                            <img src="https://abundia.io/wp-content/uploads/2025/10/fotor_1731304264622-scaled.jpg "
                                  alt="Sebastián Carabaguíaz"
                                  class="avatar">
                         </div>
@@ -304,13 +332,11 @@
                     <p class="title">Especialista en Soluciones Digitales</p>
                     <p class="subtitle">Tecnología & Innovación</p>
                 </div>
-
                 <div class="tech-divider">
                     <div class="divider-line"></div>
                     <div class="divider-dot"></div>
                     <div class="divider-line"></div>
                 </div>
-
                 <div class="contact-info">
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fas fa-phone" aria-hidden="true"></i></div>
@@ -319,7 +345,6 @@
                             <div class="contact-value"><a href="tel:+50689288555">+506 8928-8555</a></div>
                         </div>
                     </div>
-
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
                         <div class="contact-text">
@@ -327,58 +352,50 @@
                             <div class="contact-value"><a href="mailto:sebastian@abundia.io">sebastian@abundia.io</a></div>
                         </div>
                     </div>
-
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fas fa-globe" aria-hidden="true"></i></div>
                         <div class="contact-text">
                             <div class="contact-label">Sitio Web</div>
-                            <div class="contact-value"><a href="https://abundia.io" target="_blank" rel="noopener">abundia.io</a></div>
+                            <div class="contact-value"><a href="https://abundia.io " target="_blank" rel="noopener">abundia.io</a></div>
                         </div>
                     </div>
                 </div>
-
                 <button class="flip-button" onclick="flipCard()" aria-expanded="false" aria-controls="qrSection">
                     <i class="fas fa-qrcode" aria-hidden="true"></i> Acceder QR
                 </button>
             </div>
-
             <div class="card back" id="qrSection" role="region" aria-label="Tarjeta trasera - QR y acciones">
                 <div class="qr-section">
                     <div class="qr-container">
-                        <img src="https://almaviva.abundia.io/wp-content/uploads/2025/11/QR-Code-Abundia.webp"
+                        <img src="https://almaviva.abundia.io/wp-content/uploads/2025/11/QR-Code-Abundia.webp "
                              alt="Código QR"
                              class="qr-code">
                     </div>
                     <p class="qr-label">Escanea para sincronizar contacto</p>
                 </div>
-
                 <div class="action-buttons">
-                    <a href="https://wa.me/50689288555" target="_blank" class="action-btn whatsapp-btn" rel="noopener">
+                    <a href="https://wa.me/50689288555 " target="_blank" class="action-btn whatsapp-btn" rel="noopener">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Conectar WhatsApp
                     </a>
-
                     <a href="#" id="saveContact" class="action-btn save-btn">
                         <i class="fas fa-download" aria-hidden="true"></i> Exportar Contacto
                     </a>
-
-                    <a href="https://abundia.io" target="_blank" class="action-btn website-btn" rel="noopener">
+                    <a href="https://abundia.io " target="_blank" class="action-btn website-btn" rel="noopener">
                         <i class="fas fa-external-link-alt" aria-hidden="true"></i> Abrir Portal
                     </a>
                 </div>
-                
                 <button class="back-button" onclick="flipCard()">
                     <i class="fas fa-arrow-left" aria-hidden="true"></i> Volver
                 </button>
             </div>
         </div>
     </div>
-
     <script>
         const isIOS = () => {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         };
-
+        
         class MatrixRain {
             constructor() {
                 this.canvas = document.getElementById('matrixCanvas');
@@ -412,7 +429,6 @@
                     return;
                 }
                 this.lastRender = timestamp;
-                
                 this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.fillStyle = '#00ffff';
@@ -432,14 +448,14 @@
                 requestAnimationFrame((ts) => this.animate(ts));
             }
         }
-
+        
         function flipCard() {
             const container = document.getElementById('flipContainer');
             const isFlipped = container.classList.toggle('flipped');
             const btn = document.querySelector('.flip-button');
             if (btn) btn.setAttribute('aria-expanded', isFlipped ? 'true' : 'false');
         }
-
+        
         class VCardGenerator {
             constructor() {
                 this.saveButton = document.getElementById('saveContact');
@@ -455,37 +471,32 @@
                     "TITLE:Especialista en Soluciones Digitales",
                     "TEL;TYPE=CELL:+50689288555",
                     "EMAIL:sebastian@abundia.io",
-                    "URL:https://abundia.io",
+                    "URL:https://abundia.io ",
                     "NOTE:Fundador de Abundia.io — Soluciones digitales, chatbots con IA, soporte técnico, multimedia y diseño web.",
                     "END:VCARD"
                 ].join("\r\n");
-                
                 if (this.isIOSDevice) {
                     this.setupIOSDownload();
                 } else {
                     this.setupStandardDownload();
                 }
             }
-            
             setupStandardDownload() {
                 const blob = new Blob([this.vcard], { type: 'text/vcard;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
                 this.saveButton.href = url;
                 this.saveButton.download = 'sebastian_carabaguiaz.vcf';
             }
-            
             setupIOSDownload() {
                 this.saveButton.addEventListener('click', (e) => {
                     e.preventDefault();
                     this.shareVCard();
                 });
             }
-            
             shareVCard() {
                 if (navigator.share) {
                     const blob = new Blob([this.vcard], { type: 'text/vcard' });
                     const file = new File([blob], 'contacto_sebastian_carabaguiaz.vcf', { type: 'text/vcard' });
-                    
                     navigator.share({
                         files: [file],
                         title: 'Contacto - Sebastián Carabaguíaz',
@@ -498,7 +509,6 @@
                     this.fallbackDownload();
                 }
             }
-            
             fallbackDownload() {
                 const blob = new Blob([this.vcard], { type: 'text/vcard;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
@@ -513,24 +523,130 @@
                 }, 0);
             }
         }
-
+        
+        class TechEffects {
+            constructor() {
+                this.init();
+            }
+            init() {
+                this.addParticleEffects();
+                this.initKeyboardNavigation();
+                this.initTouchSupport();
+            }
+            addParticleEffects() {
+                const contactItems = document.querySelectorAll('.contact-item');
+                contactItems.forEach(item => {
+                    item.addEventListener('mouseenter', (e) => {
+                        this.createCyberParticles(item, e);
+                    });
+                    item.addEventListener('touchstart', (e) => {
+                        this.createCyberParticles(item, e);
+                    }, {passive: true});
+                });
+            }
+            createCyberParticles(element, event) {
+                const rect = element.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                // Número de partículas basado en el tamaño del elemento
+                const particlesCount = Math.floor(rect.width / 20) + 5;
+                
+                for (let i = 0; i < particlesCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    // Posición inicial aleatoria alrededor del centro
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 30 + 10;
+                    const startX = centerX + Math.cos(angle) * distance;
+                    const startY = centerY + Math.sin(angle) * distance;
+                    
+                    // Dirección y velocidad aleatorias
+                    const xDirection = (Math.random() - 0.5) * 60;
+                    const yDirection = (Math.random() - 0.5) * 40;
+                    
+                    // Tamaño y color aleatorios
+                    const size = Math.random() * 4 + 2;
+                    const hue = Math.random() * 60 + 160; // Azul a cyan
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${startX}px`;
+                    particle.style.top = `${startY}px`;
+                    particle.style.background = `hsl(${hue}, 100%, 70%)`;
+                    particle.style.boxShadow = `0 0 ${size * 2}px hsl(${hue}, 100%, 70%)`;
+                    
+                    document.body.appendChild(particle);
+                    
+                    // Animación
+                    requestAnimationFrame(() => {
+                        particle.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s ease';
+                        particle.style.transform = `translate(${xDirection}px, ${yDirection}px) scale(0.2)`;
+                        particle.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            if (particle.parentNode) {
+                                particle.parentNode.removeChild(particle);
+                            }
+                        }, 800);
+                    });
+                }
+            }
+            initKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        const focusedElement = document.activeElement;
+                        if (focusedElement.classList && (focusedElement.classList.contains('flip-button') || focusedElement.classList.contains('back-button'))) {
+                            e.preventDefault();
+                            flipCard();
+                        }
+                    }
+                    if (e.key === 'ArrowRight') document.getElementById('flipContainer').classList.add('flipped');
+                    if (e.key === 'ArrowLeft') document.getElementById('flipContainer').classList.remove('flipped');
+                });
+            }
+            initTouchSupport() {
+                let touchStartX = 0;
+                let touchEndX = 0;
+                const container = document.getElementById('flipContainer');
+                
+                container.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, {passive: true});
+                
+                container.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    this.handleSwipe();
+                }, {passive: true});
+                
+                this.handleSwipe = () => {
+                    if (touchEndX < touchStartX - 50) {
+                        document.getElementById('flipContainer').classList.add('flipped');
+                    }
+                    if (touchEndX > touchStartX + 50) {
+                        document.getElementById('flipContainer').classList.remove('flipped');
+                    }
+                };
+            }
+        }
+        
         function enableTapFlipAnywhere() {
             const isTouchDevice = isIOS() || ('ontouchstart' in window) || 
                 (window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
             if (!isTouchDevice) return;
-
             const container = document.getElementById('flipContainer');
-            const ignoreSelector = 'a, button, .action-btn, .flip-button, input, textarea, select, label, svg, .back-button';
-            
+            const ignoreSelector = 'a, button, .action-btn, .flip-button, input, textarea, select, label, svg, .back-button, .contact-item';
             container.addEventListener('click', function(e) {
                 if (e.target.closest(ignoreSelector)) return;
                 flipCard();
             }, { passive: true });
         }
-
+        
         document.addEventListener('DOMContentLoaded', () => {
             new MatrixRain();
             new VCardGenerator();
+            new TechEffects();
             enableTapFlipAnywhere();
         });
     </script>
