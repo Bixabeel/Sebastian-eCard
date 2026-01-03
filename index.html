@@ -6,7 +6,7 @@
     <title>Sebastián Carabaguíaz - Tarjeta Tecnológica</title>
     <meta name="description" content="Tarjeta de presentación digital tecnológica" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css " rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -323,7 +323,7 @@
                     <div class="tech-badge">PRO</div>
                     <div class="avatar-container">
                         <div class="avatar-frame">
-                            <img src="https://abundia.io/wp-content/uploads/2025/10/fotor_1731304264622-scaled.jpg "
+                            <img src="https://i.ibb.co/TDPxr9Rc/fotor-1731304264622.jpg"
                                  alt="Sebastián Carabaguíaz"
                                  class="avatar">
                         </div>
@@ -342,7 +342,7 @@
                         <div class="contact-icon"><i class="fas fa-phone" aria-hidden="true"></i></div>
                         <div class="contact-text">
                             <div class="contact-label">Teléfono</div>
-                            <div class="contact-value"><a href="tel:+50689288555">+506 8928-8555</a></div>
+                            <div class="contact-value"><a href="tel:+50672232295">+506 7223-2295</a></div>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -356,7 +356,7 @@
                         <div class="contact-icon"><i class="fas fa-globe" aria-hidden="true"></i></div>
                         <div class="contact-text">
                             <div class="contact-label">Sitio Web</div>
-                            <div class="contact-value"><a href="https://abundia.io " target="_blank" rel="noopener">abundia.io</a></div>
+                            <div class="contact-value"><a href="https://abundia.io" target="_blank" rel="noopener">abundia.io</a></div>
                         </div>
                     </div>
                 </div>
@@ -367,20 +367,20 @@
             <div class="card back" id="qrSection" role="region" aria-label="Tarjeta trasera - QR y acciones">
                 <div class="qr-section">
                     <div class="qr-container">
-                        <img src="https://almaviva.abundia.io/wp-content/uploads/2025/11/QR-Code-Abundia.webp "
+                        <img src="https://i.ibb.co/nMbqBV6C/Abundia-QR.png"
                              alt="Código QR"
                              class="qr-code">
                     </div>
                     <p class="qr-label">Escanea para sincronizar contacto</p>
                 </div>
                 <div class="action-buttons">
-                    <a href="https://wa.me/50689288555 " target="_blank" class="action-btn whatsapp-btn" rel="noopener">
+                    <a href="https://wa.me/50672232295" target="_blank" class="action-btn whatsapp-btn" rel="noopener">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Conectar WhatsApp
                     </a>
                     <a href="#" id="saveContact" class="action-btn save-btn">
                         <i class="fas fa-download" aria-hidden="true"></i> Exportar Contacto
                     </a>
-                    <a href="https://abundia.io " target="_blank" class="action-btn website-btn" rel="noopener">
+                    <a href="https://abundia.io" target="_blank" class="action-btn website-btn" rel="noopener">
                         <i class="fas fa-external-link-alt" aria-hidden="true"></i> Abrir Portal
                     </a>
                 </div>
@@ -469,9 +469,9 @@
                     "N:Carabaguíaz;Sebastián;;;",
                     "FN:Sebastián Carabaguíaz",
                     "TITLE:Especialista en Soluciones Digitales",
-                    "TEL;TYPE=CELL:+50689288555",
+                    "TEL;TYPE=CELL:+50672232295",
                     "EMAIL:sebastian@abundia.io",
-                    "URL:https://abundia.io ",
+                    "URL:https://abundia.io",
                     "NOTE:Fundador de Abundia.io — Soluciones digitales, chatbots con IA, soporte técnico, multimedia y diseño web.",
                     "END:VCARD"
                 ].join("\r\n");
@@ -549,26 +549,22 @@
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
                 
-                // Número de partículas basado en el tamaño del elemento
                 const particlesCount = Math.floor(rect.width / 20) + 5;
                 
                 for (let i = 0; i < particlesCount; i++) {
                     const particle = document.createElement('div');
                     particle.className = 'particle';
                     
-                    // Posición inicial aleatoria alrededor del centro
                     const angle = Math.random() * Math.PI * 2;
                     const distance = Math.random() * 30 + 10;
                     const startX = centerX + Math.cos(angle) * distance;
                     const startY = centerY + Math.sin(angle) * distance;
                     
-                    // Dirección y velocidad aleatorias
                     const xDirection = (Math.random() - 0.5) * 60;
                     const yDirection = (Math.random() - 0.5) * 40;
                     
-                    // Tamaño y color aleatorios
                     const size = Math.random() * 4 + 2;
-                    const hue = Math.random() * 60 + 160; // Azul a cyan
+                    const hue = Math.random() * 60 + 160;
                     
                     particle.style.width = `${size}px`;
                     particle.style.height = `${size}px`;
@@ -579,7 +575,6 @@
                     
                     document.body.appendChild(particle);
                     
-                    // Animación
                     requestAnimationFrame(() => {
                         particle.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s ease';
                         particle.style.transform = `translate(${xDirection}px, ${yDirection}px) scale(0.2)`;
