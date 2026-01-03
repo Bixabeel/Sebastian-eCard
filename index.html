@@ -63,9 +63,11 @@
             background: #0a0a0a;
             border-radius: 8px;
             box-shadow: 0 0 40px rgba(0,255,255,0.1), 0 20px 60px rgba(0,0,0,0.8);
-            overflow: auto;
+            overflow: hidden;
             border: 1px solid #1a1a1a;
             pointer-events: auto;
+            display: flex;
+            flex-direction: column;
         }
         .card::before {
             content: '';
@@ -84,10 +86,16 @@
         @keyframes borderPulse { 0%,100%{opacity:0.6;}50%{opacity:0.9;} }
         .front, .back {
             display: flex; flex-direction: column;
-            padding: 45px 35px;
+            height: 100%;
+            padding: 35px 30px;
         }
         .back { transform: rotateY(180deg); }
-        .header { text-align: center; margin-bottom: 35px; position: relative; }
+        .header { 
+            text-align: center; 
+            margin-bottom: 25px; 
+            position: relative;
+            flex-shrink: 0;
+        }
         .tech-badge {
             position: absolute;
             top: -10px; right: -10px;
@@ -97,12 +105,14 @@
             text-transform: uppercase; letter-spacing: 1px;
             animation: pulse 2s infinite;
             box-shadow: 0 0 10px rgba(0,255,255,0.7);
+            z-index: 2;
         }
         @keyframes pulse { 0%,100%{opacity:0.8;}50%{opacity:1;} }
         .avatar-container {
             position: relative;
-            width: 110px; height: 110px;
-            margin: 0 auto 20px;
+            width: 100px; height: 100px;
+            margin: 0 auto 15px;
+            flex-shrink: 0;
         }
         .avatar-frame {
             position: relative;
@@ -129,144 +139,322 @@
         .avatar:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0,255,255,0.4); }
         .name {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px; font-weight: 700; color: #fff;
-            margin-bottom: 8px; letter-spacing: -0.5px;
+            font-size: 24px; font-weight: 700; color: #fff;
+            margin-bottom: 5px; letter-spacing: -0.5px;
             position: relative;
+            line-height: 1.1;
         }
         .name::after {
             content: ''; position: absolute;
-            bottom: -4px; left: 50%; transform: translateX(-50%);
-            width: 40px; height: 2px;
+            bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 2px;
             background: linear-gradient(90deg,transparent,#00ffff,transparent);
             animation: lineGlow 2s ease infinite;
         }
         @keyframes lineGlow { 0%,100%{opacity:0.3;}50%{opacity:0.8;} }
-        .title { font-size: 12px; color: #00ffff; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-        .subtitle { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        .tech-divider {
-            display: flex; align-items: center;
-            margin: 25px 0; gap: 15px;
+        .title { 
+            font-size: 11px; 
+            color: #00ffff; 
+            font-weight: 500; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+            margin-top: 12px;
+            margin-bottom: 5px;
         }
-        .divider-line {
-            flex: 1; height: 1px;
-            background: linear-gradient(90deg,transparent,#00ffff,transparent);
-            opacity: 0.3;
+        .subtitle { 
+            font-size: 10px; 
+            color: #666; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
         }
-        .divider-dot {
-            width: 4px; height: 4px; background: #00ffff; border-radius: 50%;
-            animation: dotPulse 2s infinite;
-        }
-        @keyframes dotPulse { 0%,100%{opacity:0.3; transform:scale(1);}50%{opacity:1; transform:scale(1.5);} }
         .contact-info {
-            flex: 1; display: flex; flex-direction: column; gap: 14px;
+            flex: 1;
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 15px;
+        }
+        .contact-info::-webkit-scrollbar {
+            width: 4px;
+        }
+        .contact-info::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 2px;
+        }
+        .contact-info::-webkit-scrollbar-thumb {
+            background: #00ffff;
+            border-radius: 2px;
         }
         .contact-item {
-            display: flex; align-items: center; gap: 16px;
-            padding: 14px; background: #0f0f0f;
-            border: 1px solid #1a1a1a; border-radius: 6px;
-            transition: all .3s ease; position: relative; overflow: hidden;
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+            padding: 12px; 
+            background: #0f0f0f;
+            border: 1px solid #1a1a1a; 
+            border-radius: 6px;
+            transition: all .3s ease; 
+            position: relative; 
+            overflow: hidden;
             cursor: pointer;
+            min-height: 60px;
         }
         .contact-item::before {
-            content: ''; position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
+            content: ''; 
+            position: absolute;
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
             transition: left .5s ease;
         }
         .contact-item:hover::before { left: 100%; }
         .contact-item:hover {
-            background: #1a1a1a; border-color: #00ffff;
-            transform: translateX(4px); box-shadow: 0 0 20px rgba(0,255,255,0.1);
+            background: #1a1a1a; 
+            border-color: #00ffff;
+            transform: translateX(4px); 
+            box-shadow: 0 0 20px rgba(0,255,255,0.1);
         }
         .contact-icon {
-            width: 38px; height: 38px; background: #1a1a1a;
-            border: 1px solid #2a2a2a; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            color: #00ffff; font-size: 14px; transition: all .3s ease;
+            width: 36px; 
+            height: 36px; 
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a; 
+            border-radius: 6px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: #00ffff; 
+            font-size: 14px; 
+            transition: all .3s ease;
+            flex-shrink: 0;
         }
         .contact-item:hover .contact-icon {
-            background: #00ffff; color: #000;
-            box-shadow: 0 0 15px rgba(0,255,255,0.5); transform: rotate(5deg);
+            background: #00ffff; 
+            color: #000;
+            box-shadow: 0 0 15px rgba(0,255,255,0.5); 
+            transform: rotate(5deg);
         }
-        .contact-text { flex: 1; }
-        .contact-label { font-size: 10px; color: #666; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .contact-value { font-size: 14px; color: #fff; font-weight: 500; font-family: 'Space Grotesk', sans-serif; }
+        .contact-text { 
+            flex: 1; 
+            min-width: 0;
+        }
+        .contact-label { 
+            font-size: 9px; 
+            color: #666; 
+            margin-bottom: 2px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        .contact-value { 
+            font-size: 13px; 
+            color: #fff; 
+            font-weight: 500; 
+            font-family: 'Space Grotesk', sans-serif; 
+            word-break: break-word;
+        }
         .contact-value a { 
-            color: inherit; text-decoration: none; 
-            position: relative; transition: color .3s ease;
+            color: inherit; 
+            text-decoration: none; 
+            position: relative; 
+            transition: color .3s ease;
         }
         .contact-value a::after {
-            content: ''; position: absolute;
-            bottom: -2px; left: 0; width: 0; height: 1px;
-            background: #00ffff; transition: width .3s ease;
+            content: ''; 
+            position: absolute;
+            bottom: -2px; 
+            left: 0; 
+            width: 0; 
+            height: 1px;
+            background: #00ffff; 
+            transition: width .3s ease;
         }
         .contact-value a:hover { color: #00ffff; }
         .contact-value a:hover::after { width: 100%; }
         .flip-button {
-            margin-top: 25px; padding: 14px 20px; background: transparent;
-            border: 1px solid #1a1a1a; border-radius: 6px;
-            color: #00ffff; font-size: 12px; font-weight: 500; cursor: pointer;
-            transition: all .3s ease; text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            position: relative; overflow: hidden;
+            margin-top: auto;
+            padding: 14px 20px; 
+            background: transparent;
+            border: 1px solid #1a1a1a; 
+            border-radius: 6px;
+            color: #00ffff; 
+            font-size: 12px; 
+            font-weight: 500; 
+            cursor: pointer;
+            transition: all .3s ease; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px;
+            position: relative; 
+            overflow: hidden;
+            flex-shrink: 0;
         }
         .flip-button::before {
-            content: ''; position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
+            content: ''; 
+            position: absolute;
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent);
             transition: left .5s ease;
         }
         .flip-button:hover::before { left: 100%; }
         .flip-button:hover {
-            background: #1a1a1a; border-color: #00ffff; color: #fff;
-            transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,255,255,0.2);
+            background: #1a1a1a; 
+            border-color: #00ffff; 
+            color: #fff;
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 20px rgba(0,255,255,0.2);
         }
-        .qr-section { text-align: center; margin-bottom: 30px; }
+        .qr-section { 
+            text-align: center; 
+            margin-bottom: 25px;
+            flex-shrink: 0;
+        }
         .qr-container {
-            display: inline-block; padding: 20px; background: #0f0f0f;
-            border: 1px solid #1a1a1a; border-radius: 8px;
-            position: relative; overflow: hidden;
+            display: inline-block; 
+            padding: 18px; 
+            background: #0f0f0f;
+            border: 1px solid #1a1a1a; 
+            border-radius: 8px;
+            position: relative; 
+            overflow: hidden;
         }
         .qr-container::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
+            content: ''; 
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            height: 2px;
             background: linear-gradient(90deg, transparent, #00ffff, transparent);
             animation: scanLine 2s linear infinite;
         }
         @keyframes scanLine { 0%{transform:translateX(-100%);}100%{transform:translateX(100%);} }
-        .qr-code { width: 170px; height: 170px; border-radius: 4px; filter: contrast(1.2); }
-        .qr-label { font-size: 11px; color: #666; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .action-buttons { display: flex; flex-direction: column; gap: 12px; }
+        .qr-code { 
+            width: 160px; 
+            height: 160px; 
+            border-radius: 4px; 
+            filter: contrast(1.2); 
+        }
+        .qr-label { 
+            font-size: 11px; 
+            color: #666; 
+            margin-top: 15px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        .action-buttons { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .action-buttons::-webkit-scrollbar {
+            width: 4px;
+        }
+        .action-buttons::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 2px;
+        }
+        .action-buttons::-webkit-scrollbar-thumb {
+            background: #00ffff;
+            border-radius: 2px;
+        }
         .action-btn {
-            padding: 15px; background: #0f0f0f; border: 1px solid #1a1a1a;
-            border-radius: 6px; color: #fff; font-size: 13px; font-weight: 500;
-            cursor: pointer; transition: all .3s ease; text-decoration: none;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-            position: relative; overflow: hidden;
+            padding: 14px; 
+            background: #0f0f0f; 
+            border: 1px solid #1a1a1a;
+            border-radius: 6px; 
+            color: #fff; 
+            font-size: 12px; 
+            font-weight: 500;
+            cursor: pointer; 
+            transition: all .3s ease; 
+            text-decoration: none;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            position: relative; 
+            overflow: hidden;
+            text-align: center;
+            flex-shrink: 0;
         }
         .action-btn::before {
-            content: ''; position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
+            content: ''; 
+            position: absolute;
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
             transition: left .5s ease;
         }
         .action-btn:hover::before { left: 100%; }
         .action-btn:hover {
-            transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,255,255,0.2);
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 20px rgba(0,255,255,0.2);
         }
-        .whatsapp-btn:hover { background: #25D366; border-color: #25D366; color: #000; box-shadow: 0 5px 20px rgba(37,211,102,0.4); }
-        .save-btn:hover { background: #00ffff; border-color: #00ffff; color: #000; box-shadow: 0 5px 20px rgba(0,255,255,0.4); }
-        .website-btn:hover { background: #0080ff; border-color: #0080ff; color: #fff; box-shadow: 0 5px 20px rgba(0,128,255,0.4); }
+        .whatsapp-btn:hover { 
+            background: #25D366; 
+            border-color: #25D366; 
+            color: #000; 
+            box-shadow: 0 5px 20px rgba(37,211,102,0.4); 
+        }
+        .telegram-btn:hover { 
+            background: #0088cc; 
+            border-color: #0088cc; 
+            color: #fff; 
+            box-shadow: 0 5px 20px rgba(0,136,204,0.4); 
+        }
+        .save-btn:hover { 
+            background: #00ffff; 
+            border-color: #00ffff; 
+            color: #000; 
+            box-shadow: 0 5px 20px rgba(0,255,255,0.4); 
+        }
+        .website-btn:hover { 
+            background: #0080ff; 
+            border-color: #0080ff; 
+            color: #fff; 
+            box-shadow: 0 5px 20px rgba(0,128,255,0.4); 
+        }
         .back-button {
-            margin-top: 20px; padding: 12px; background: transparent;
-            border: 1px solid #2a2a2a; border-radius: 6px;
-            color: #666; font-size: 11px; font-weight: 400; cursor: pointer;
-            transition: all .3s ease; text-transform: uppercase; letter-spacing: 0.5px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 15px; 
+            padding: 12px; 
+            background: transparent;
+            border: 1px solid #2a2a2a; 
+            border-radius: 6px;
+            color: #666; 
+            font-size: 11px; 
+            font-weight: 400; 
+            cursor: pointer;
+            transition: all .3s ease; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            flex-shrink: 0;
         }
         .back-button:hover {
-            background: #1a1a1a; border-color: #444; color: #00ffff;
+            background: #1a1a1a; 
+            border-color: #444; 
+            color: #00ffff;
             transform: translateY(-1px);
         }
         .particle {
@@ -300,17 +488,39 @@
                     max(16px, env(safe-area-inset-left))
                     max(20px, env(safe-area-inset-bottom))
                     max(16px, env(safe-area-inset-right));
-                overflow: auto; -webkit-overflow-scrolling: touch;
+                overflow: auto; 
+                -webkit-overflow-scrolling: touch;
             }
             .name { font-size: 22px; }
             .qr-code { width: 140px; height: 140px; }
-            .avatar-container { width: 96px; height: 96px; }
+            .avatar-container { width: 90px; height: 90px; }
+            .contact-item { padding: 10px; gap: 12px; min-height: 56px; }
+            .contact-icon { width: 34px; height: 34px; }
+            .contact-value { font-size: 12px; }
             .flip-button { margin-bottom: 10px; }
             input, select, textarea { font-size: 16px; }
         }
         @media (max-height: 700px) {
             .flip-container { height: 95vh; }
-            .front, .back { padding: 30px 25px; }
+            .front, .back { padding: 25px 20px; }
+            .avatar-container { width: 85px; height: 85px; }
+            .qr-code { width: 140px; height: 140px; }
+            .contact-item { padding: 10px; min-height: 54px; }
+        }
+        @media (max-height: 600px) {
+            .front, .back { padding: 20px 18px; }
+            .avatar-container { width: 75px; height: 75px; margin-bottom: 10px; }
+            .name { font-size: 20px; margin-bottom: 3px; }
+            .title { font-size: 10px; margin-top: 8px; margin-bottom: 3px; }
+            .subtitle { font-size: 9px; margin-bottom: 15px; }
+            .contact-item { padding: 8px; gap: 10px; min-height: 50px; }
+            .contact-icon { width: 32px; height: 32px; font-size: 12px; }
+            .contact-label { font-size: 8px; }
+            .contact-value { font-size: 11px; }
+            .flip-button { padding: 12px 16px; font-size: 11px; }
+            .qr-code { width: 120px; height: 120px; }
+            .action-btn { padding: 12px; font-size: 11px; }
+            .back-button { padding: 10px; font-size: 10px; }
         }
     </style>
 </head>
@@ -332,11 +542,7 @@
                     <p class="title">Especialista en Soluciones Digitales</p>
                     <p class="subtitle">Tecnología & Innovación</p>
                 </div>
-                <div class="tech-divider">
-                    <div class="divider-line"></div>
-                    <div class="divider-dot"></div>
-                    <div class="divider-line"></div>
-                </div>
+                
                 <div class="contact-info">
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fas fa-phone" aria-hidden="true"></i></div>
@@ -349,7 +555,14 @@
                         <div class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
                         <div class="contact-text">
                             <div class="contact-label">Email</div>
-                            <div class="contact-value"><a href="mailto:sebastian@abundia.io">sebastian@abundia.io</a></div>
+                            <div class="contact-value"><a href="mailto:abundiatech@engineer.com">abundiatech@engineer.com</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fab fa-telegram" aria-hidden="true"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Telegram</div>
+                            <div class="contact-value"><a href="https://t.me/abundiatech" target="_blank" rel="noopener">@abundiatech</a></div>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -360,6 +573,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <button class="flip-button" onclick="flipCard()" aria-expanded="false" aria-controls="qrSection">
                     <i class="fas fa-qrcode" aria-hidden="true"></i> Acceder QR
                 </button>
@@ -373,9 +587,13 @@
                     </div>
                     <p class="qr-label">Escanea para sincronizar contacto</p>
                 </div>
+                
                 <div class="action-buttons">
                     <a href="https://wa.me/50672232295" target="_blank" class="action-btn whatsapp-btn" rel="noopener">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Conectar WhatsApp
+                    </a>
+                    <a href="https://t.me/abundiatech" target="_blank" class="action-btn telegram-btn" rel="noopener">
+                        <i class="fab fa-telegram" aria-hidden="true"></i> Contactar por Telegram
                     </a>
                     <a href="#" id="saveContact" class="action-btn save-btn">
                         <i class="fas fa-download" aria-hidden="true"></i> Exportar Contacto
@@ -384,6 +602,7 @@
                         <i class="fas fa-external-link-alt" aria-hidden="true"></i> Abrir Portal
                     </a>
                 </div>
+                
                 <button class="back-button" onclick="flipCard()">
                     <i class="fas fa-arrow-left" aria-hidden="true"></i> Volver
                 </button>
@@ -470,9 +689,10 @@
                     "FN:Sebastián Carabaguíaz",
                     "TITLE:Especialista en Soluciones Digitales",
                     "TEL;TYPE=CELL:+50672232295",
-                    "EMAIL:sebastian@abundia.io",
+                    "EMAIL:abundiatech@engineer.com",
                     "URL:https://abundia.io",
-                    "NOTE:Fundador de Abundia.io — Soluciones digitales, chatbots con IA, soporte técnico, multimedia y diseño web.",
+                    "X-SOCIALPROFILE;TYPE=telegram:https://t.me/abundiatech",
+                    "NOTE:Fundador de Abundia.io — Soluciones digitales, chatbots con IA, soporte técnico, multimedia y diseño web. Telegram: @abundiatech",
                     "END:VCARD"
                 ].join("\r\n");
                 if (this.isIOSDevice) {
